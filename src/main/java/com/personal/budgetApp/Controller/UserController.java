@@ -36,7 +36,15 @@ public class UserController {
 
     @PostMapping(CREATE_USER_ENDPOINT)
     public Mono<ResponseEntity<CreateUserResponse>> createUser(@RequestBody CreateUserRequest createUserRequest) {
+        log.info("Creating New User...");
 
-        return null;
+
+        return userService.createUserService(createUserRequest)
+                .map(resp -> {
+                    log.info("User created successfully");
+
+                    return ResponseEntity.ok().body(resp);
+
+                });
     }
 }
