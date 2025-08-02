@@ -37,7 +37,7 @@ public class CreateUserRequest {
 
     @NotBlank()
     @Size(min = 8, message = PASSWORD_ERROR_MESSAGE)
-    private String password; //TODO: Hash password before storage
+    private String password;
 
     private String currency;
 
@@ -46,8 +46,5 @@ public class CreateUserRequest {
     private BigDecimal monthlyBudget;
 
     private String timezone;
-
-
-
 
 }

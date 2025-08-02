@@ -6,13 +6,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class BuilderUtil {
 
-    public static User buildDBDetails(CreateUserRequest createUserRequest, BCryptPasswordEncoder passwordEncoder) {
+    public static User buildDBDetails(CreateUserRequest createUserRequest) {
+        String hashedPassword = PasswordUtil.hashPassword(createUserRequest.getPassword());
+
         return User.builder()
+                .accountId(ValidationUtil.generateAccountId())
                 .firstName(createUserRequest.getFirstName())
                 .lastName(createUserRequest.getLastName())
                 .email(createUserRequest.getEmail())
+                .password(hashedPassword)
                 .dateOfBirth(createUserRequest.getDateOfBirth())
-                .password(passwordEncoder.encode(createUserRequest.getPassword()))
                 .phoneNumber(createUserRequest.getPhoneNumber())
                 .currency(createUserRequest.getCurrency())
                 .income(createUserRequest.getIncome())

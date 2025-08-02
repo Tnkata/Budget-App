@@ -28,8 +28,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "ACCOUNT_ID", nullable = false, unique = true)
+    private String accountId;
+
     private String firstName;
+
     private String lastName;
+
+    private String username;
 
     @Column(unique = true)
     private String email;
