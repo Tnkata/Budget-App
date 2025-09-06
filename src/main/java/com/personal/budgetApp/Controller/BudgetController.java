@@ -1,4 +1,3 @@
 package com.personal.budgetApp.Controller;
 
-public class BudgetController {
-}
+public class BudgetController {}

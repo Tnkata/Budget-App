@@ -1,63 +1,73 @@
 package com.personal.budgetApp.DBEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name="USERS")
+@Table(name = "USERS")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "ACCOUNT_ID", nullable = false, unique = true)
-    private String accountId;
+  @Column(name = "ACCOUNT_ID", nullable = false, unique = true)
+  private String accountId;
 
-    private String firstName;
+  @Column(name = "FIRST_NAME", nullable = false)
+  private String firstName;
 
-    private String lastName;
+  @Column(name = "LAST_NAME", nullable = false)
+  private String lastName;
 
-    private String username;
+  @Column(name = "USERNAME", nullable = false)
+  private String username;
 
-    @Column(unique = true)
-    private String email;
+  @Column(name = "EMAIL", nullable = false, unique = true)
+  private String email;
 
-    private String password;
+  @Column(name = "PASSWORD", nullable = false)
+  private String password;
 
-    private String phoneNumber;
+  @Column(name = "PHONE_NUMBER")
+  private String phoneNumber;
 
-    private LocalDate dateOfBirth;
+  @Column(name = "DATE_OF_BIRTH")
+  private String dateOfBirth;
 
-    private String currency;
+  @Column(name = "CURRENCY")
+  private String currency;
 
-    private BigDecimal income;
+  @Column(name = "INCOME")
+  private BigDecimal income;
 
-    private BigDecimal monthlyBudget;
+  @Column(name = "MONTHLY_BUDGET")
+  private BigDecimal monthlyBudget;
 
-    private String timezone;
+  @Column(name = "TIMEZONE")
+  private String timezone;
 
-    private LocalDate createdAt;
+  @Column(name = "CREATED_AT")
+  private LocalDate createdAt;
 
-    @PrePersist
-    void onCreate() {
-        this.createdAt = LocalDate.now();
-    }
+  @PrePersist
+  void onCreate() {
+    this.createdAt = LocalDate.now();
+  }
 }

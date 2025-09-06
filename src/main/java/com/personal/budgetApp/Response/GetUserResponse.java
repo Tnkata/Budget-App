@@ -1,4 +1,3 @@
 package com.personal.budgetApp.Response;
 
-public class GetUserResponse {
-}
+public class GetUserResponse {}

@@ -1,4 +1,3 @@
 package com.personal.budgetApp.Request.User;
 
-public class UpdateUserRequest {
-}
+public class UpdateUserRequest {}

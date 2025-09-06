@@ -1,4 +1,3 @@
 package com.personal.budgetApp.Service;
 
-public class CategoryService {
-}
+public class CategoryService {}

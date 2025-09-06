@@ -1,4 +1,3 @@
 package com.personal.budgetApp.Model;
 
-public class Transactions {
-}
+public class Transactions {}
