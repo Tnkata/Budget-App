@@ -10,15 +10,14 @@ import reactor.netty.http.client.HttpClient;
 @Configuration
 public class webClientConfig {
 
-    private static HttpClient httpClient() {
-        return HttpClient.create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
-    }
+  private static HttpClient httpClient() {
+    return HttpClient.create().option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
+  }
 
-    @Bean
-    public static WebClient webClient() {
-        return WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(httpClient()))
-                .build();
-    }
+  @Bean
+  public static WebClient webClient() {
+    return WebClient.builder()
+        .clientConnector(new ReactorClientHttpConnector(httpClient()))
+        .build();
+  }
 }

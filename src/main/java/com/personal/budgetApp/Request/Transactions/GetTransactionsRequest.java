@@ -1,4 +1,3 @@
 package com.personal.budgetApp.Request.Transactions;
 
-public class GetTransactionsRequest {
-}
+public class GetTransactionsRequest {}

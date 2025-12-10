@@ -1,23 +1,28 @@
 package com.personal.budgetApp.Utils;
 
+import static com.personal.budgetApp.Utils.PasswordUtil.hashPassword;
+
 import com.personal.budgetApp.DBEntity.User;
 import com.personal.budgetApp.Request.User.CreateUserRequest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class BuilderUtil {
 
-    public static User buildDBDetails(CreateUserRequest createUserRequest, BCryptPasswordEncoder passwordEncoder) {
-        return User.builder()
-                .firstName(createUserRequest.getFirstName())
-                .lastName(createUserRequest.getLastName())
-                .email(createUserRequest.getEmail())
-                .dateOfBirth(createUserRequest.getDateOfBirth())
-                .password(passwordEncoder.encode(createUserRequest.getPassword()))
-                .phoneNumber(createUserRequest.getPhoneNumber())
-                .currency(createUserRequest.getCurrency())
-                .income(createUserRequest.getIncome())
-                .monthlyBudget(createUserRequest.getMonthlyBudget())
-                .timezone(createUserRequest.getTimezone())
-                .build();
-    }
+  public static User buildDBDetails(CreateUserRequest createUserRequest) {
+    String hashedPassword = hashPassword(createUserRequest.getPassword());
+
+    return User.builder()
+        .accountId(ValidationUtil.generateAccountId())
+        .firstName(createUserRequest.getFirstName())
+        .lastName(createUserRequest.getLastName())
+        .username(createUserRequest.getUserName())
+        .email(createUserRequest.getEmail())
+        .password(hashedPassword)
+        .dateOfBirth(createUserRequest.getDateOfBirth())
+        .phoneNumber(createUserRequest.getPhoneNumber())
+        .currency(createUserRequest.getCurrency())
+        .income(createUserRequest.getIncome())
+        .monthlyBudget(createUserRequest.getMonthlyBudget())
+        .timezone(createUserRequest.getTimezone())
+        .build();
+  }
 }
