@@ -1,10 +1,11 @@
 package com.personal.budgetApp.Service;
 
-import com.personal.budgetApp.DBEntity.User;
 import com.personal.budgetApp.Exceptions.BadRequestException;
+import com.personal.budgetApp.Model.DBEntity.UserDTO;
+import com.personal.budgetApp.Model.Request.User.CreateUserRequest;
+import com.personal.budgetApp.Model.Response.CreateUserResponse;
+import com.personal.budgetApp.Model.Response.GetUserResponse;
 import com.personal.budgetApp.Repository.UserRepository;
-import com.personal.budgetApp.Request.User.CreateUserRequest;
-import com.personal.budgetApp.Response.CreateUserResponse;
 import com.personal.budgetApp.Utils.BuilderUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,11 +28,7 @@ public class UserService {
 
     return Mono.defer(
         () -> {
-          if (userRepository.findByEmail(createUserRequest.getEmail()).isPresent()) {
-            return Mono.error(new BadRequestException("email", "User Already exists"));
-          }
-
-          User saved = userRepository.save(BuilderUtil.buildDBDetails(createUserRequest));
+          UserDTO saved = userRepository.save(BuilderUtil.buildDBDetails(createUserRequest));
 
           return Mono.just(
               CreateUserResponse.builder()
@@ -41,6 +38,20 @@ public class UserService {
                   .email(saved.getEmail())
                   .currency(saved.getCurrency())
                   .build());
+        });
+  }
+
+  public Mono<GetUserResponse> getUserService(final String accountId) {
+    return Mono.defer(
+        () -> {
+          if (userRepository.checkIfAccountIdExists(accountId).isPresent()) {
+
+            return BuilderUtil.buildGetUserResponse(userRepository.getUserDetails(accountId));
+          } else {
+            return Mono.error(
+                new BadRequestException(
+                    "AccountId invalid", "Invalid accountId. User account details not found"));
+          }
         });
   }
 }

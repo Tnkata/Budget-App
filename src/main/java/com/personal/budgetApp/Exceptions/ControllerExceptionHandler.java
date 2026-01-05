@@ -3,7 +3,7 @@ package com.personal.budgetApp.Exceptions;
 import com.personal.budgetApp.Controller.BudgetController;
 import com.personal.budgetApp.Controller.TransactionsController;
 import com.personal.budgetApp.Controller.UserController;
-import com.personal.budgetApp.Response.ErrorResponse;
+import com.personal.budgetApp.Model.Response.ErrorResponse;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
