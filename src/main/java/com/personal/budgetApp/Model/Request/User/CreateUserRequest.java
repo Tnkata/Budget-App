@@ -1,4 +1,4 @@
-package com.personal.budgetApp.Request.User;
+package com.personal.budgetApp.Model.Request.User;
 
 import static com.personal.budgetApp.Constants.ErrorMessageConstants.INVALID_ERROR_MESSAGE;
 import static com.personal.budgetApp.Constants.ErrorMessageConstants.PASSWORD_ERROR_MESSAGE;

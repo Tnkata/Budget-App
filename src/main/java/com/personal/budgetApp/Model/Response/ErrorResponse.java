@@ -1,4 +1,4 @@
-package com.personal.budgetApp.Response;
+package com.personal.budgetApp.Model.Response;
 
 import java.util.List;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.personal.budgetApp.DBEntity;
+package com.personal.budgetApp.Model.DBEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,7 +22,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class UserDTO {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -65,6 +65,9 @@ public class User {
 
   @Column(name = "CREATED_AT")
   private LocalDate createdAt;
+
+  @Column(name = "BALANCE")
+  private String balance;
 
   @PrePersist
   void onCreate() {

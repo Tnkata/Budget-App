@@ -2,11 +2,15 @@ package com.personal.budgetApp.Constants;
 
 public class ModelConstants {
 
+  public static final String ACCOUNT_ID = "accountId";
+
   public static final String FIRST_NAME = "firstName";
 
   public static final String LAST_NAME = "lastName";
 
   public static final String EMAIL = "email";
+
+  public static final String BALANCE = "balance";
 
   public static final String USER_NAME = "userName";
 

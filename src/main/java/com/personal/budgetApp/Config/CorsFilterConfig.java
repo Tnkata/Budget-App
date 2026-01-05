@@ -14,6 +14,7 @@ public class CorsFilterConfig implements WebMvcConfigurer {
         .allowedOrigins("localhost:8080")
         .allowedMethods("POST", "PUT", "GET", "DELETE")
         .allowedHeaders("Request-Id", "Client-Id", "Authorization")
-        .allowCredentials(true);
+        .allowCredentials(true)
+        .maxAge(3600); // How long in seconds results of CORS request are cached
   }
 }

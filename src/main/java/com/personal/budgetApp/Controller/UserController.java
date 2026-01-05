@@ -1,21 +1,19 @@
 package com.personal.budgetApp.Controller;
 
-import static com.personal.budgetApp.Constants.ServiceConstants.CREATE_USER_ENDPOINT;
-import static com.personal.budgetApp.Constants.ServiceConstants.USER_CONTROLLER_SCOPE;
+import static com.personal.budgetApp.Constants.ServiceConstants.*;
 
-import com.personal.budgetApp.Request.User.CreateUserRequest;
-import com.personal.budgetApp.Response.CreateUserResponse;
+import com.personal.budgetApp.Model.Request.User.CreateUserRequest;
+import com.personal.budgetApp.Model.Response.CreateUserResponse;
+import com.personal.budgetApp.Model.Response.GetUserResponse;
 import com.personal.budgetApp.Service.BudgetService;
 import com.personal.budgetApp.Service.TransactionService;
 import com.personal.budgetApp.Service.UserService;
 import jakarta.validation.Valid;
+import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -47,6 +45,21 @@ public class UserController {
               log.info("User created successfully");
 
               return ResponseEntity.ok().body(resp);
+            });
+  }
+
+  @GetMapping(GET_USER_ENDPOINT)
+  public Mono<ResponseEntity<GetUserResponse>> getUser(
+      @PathVariable final String accountId, @RequestHeader Map<String, String> headers) {
+    log.info("Retrieving User Information...");
+
+    return userService
+        .getUserService(accountId)
+        .map(
+            getUserResponse -> {
+              log.info("User Information Retrieved Successfully");
+
+              return ResponseEntity.ok().body(getUserResponse);
             });
   }
 }
