@@ -2,11 +2,14 @@ package com.personal.budgetApp.Controller;
 
 import static com.personal.budgetApp.Constants.ServiceConstants.CREATE_USER_ENDPOINT;
 import static com.personal.budgetApp.Constants.ServiceConstants.GET_USER_ENDPOINT;
+import static com.personal.budgetApp.Constants.ServiceConstants.UPDATE_ENDPOINT;
 import static com.personal.budgetApp.Constants.ServiceConstants.USER_CONTROLLER_SCOPE;
 
 import com.personal.budgetApp.Model.Request.User.CreateUserRequest;
+import com.personal.budgetApp.Model.Request.User.UpdateUserRequest;
 import com.personal.budgetApp.Model.Response.CreateUserResponse;
 import com.personal.budgetApp.Model.Response.GetUserResponse;
+import com.personal.budgetApp.Model.Response.UpdateUserResponse;
 import com.personal.budgetApp.Service.BudgetService;
 import com.personal.budgetApp.Service.TransactionService;
 import com.personal.budgetApp.Service.UserService;
@@ -18,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,11 +47,14 @@ public class UserController {
 
   @PostMapping(CREATE_USER_ENDPOINT)
   public Mono<ResponseEntity<CreateUserResponse>> createUser(
-      @Valid @RequestBody CreateUserRequest createUserRequest) {
+      @Valid @RequestBody CreateUserRequest createUserRequest,
+      @RequestHeader Map<String, String> headers) {
     log.info("Creating New User...");
 
+    String requestId = headers.get("Request-Id");
+
     return userService
-        .createUserService(createUserRequest)
+        .createUserService(createUserRequest, requestId)
         .map(
             resp -> {
               log.info("User created successfully");
