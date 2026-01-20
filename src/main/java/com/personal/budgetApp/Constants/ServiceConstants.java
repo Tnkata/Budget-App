@@ -11,4 +11,6 @@ public class ServiceConstants {
   public static final String CREATE_USER_ENDPOINT = "/createUser";
 
   public static final String GET_USER_ENDPOINT = "/getUser";
+
+  public static final String UPDATE_ENDPOINT = "/updateUser";
 }

@@ -12,7 +12,7 @@ public enum ErrorCodes {
   INTERNAL_ERROR(
       "2300",
       null,
-      "Your request cannot be proocessed at this time. Please tyr again later.",
+      "Your request cannot be processed at this time. Please tyr again later.",
       "Internal Error",
       HttpStatus.INTERNAL_SERVER_ERROR),
   USER_EMAIL_ALREADY_EXIST(
