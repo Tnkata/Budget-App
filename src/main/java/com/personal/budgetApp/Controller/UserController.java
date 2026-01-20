@@ -68,36 +68,13 @@ public class UserController {
       @PathVariable final String accountId, @RequestHeader Map<String, String> headers) {
     log.info("Retrieving User Information...");
 
-    String requestId = headers.get("Request-Id");
-
     return userService
-        .getUserService(accountId, requestId)
+        .getUserService(accountId)
         .map(
             getUserResponse -> {
               log.info("User Information Retrieved Successfully");
 
               return ResponseEntity.ok().body(getUserResponse);
-            });
-  }
-
-  @PutMapping(UPDATE_ENDPOINT)
-  public Mono<ResponseEntity<UpdateUserResponse>> updateUser(
-      @RequestBody final UpdateUserRequest updateUserRequest,
-      @RequestHeader Map<String, String> headers) {
-    log.info("Updating User's Information");
-
-    String requestId = headers.get("Request-Id");
-
-    return userService
-        .updateUserService(updateUserRequest, requestId)
-        .map(
-            updateUserResponse -> {
-              log.info(
-                  "User Information has been successfully updated : {}. Request-Id : {}"
-                      + updateUserResponse
-                      + requestId);
-
-              return ResponseEntity.ok().body(updateUserResponse);
             });
   }
 }
