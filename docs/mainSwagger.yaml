@@ -1,0 +1,894 @@
+openapi: 3.0.3
+
+info:
+  title: Handy Track Budgeting Application API
+  version: 1.0.0
+  description: |
+    REST API for a budgeting and personal finance platform.
+
+    Features include:
+    - JWT Authentication
+    - User Management
+    - Account Management
+    - Transactions
+    - Budgets
+    - Categories
+    - Analytics
+
+servers:
+  - url: http://localhost:8080
+    description: Local Development
+
+tags:
+  - name: Authentication
+  - name: Users
+  - name: Accounts
+  - name: Transactions
+  - name: Categories
+  - name: Budgets
+  - name: Analytics
+
+security:
+  - bearerAuth: []
+
+paths:
+
+  #################################################
+  # AUTHENTICATION
+  #################################################
+
+  /handyTrack/v1/auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      description: Creates a new user account and returns JWT tokens.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            examples:
+              register:
+                value:
+                  firstName: Timothy
+                  lastName: Nkata
+                  email: tim@example.com
+                  password: Password123!
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        '409':
+          description: User already exists
+
+  /handyTrack/v1/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login user
+      description: Authenticates user credentials and returns JWT tokens.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              login:
+                value:
+                  email: tim@example.com
+                  password: Password123!
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+        '401':
+          description: Invalid credentials
+
+  /handyTrack/v1/auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh access token
+      description: Generates a new access token using refresh token.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+        '401':
+          description: Invalid refresh token
+
+  /handyTrack/v1/auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout user
+      description: Invalidates refresh token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+      responses:
+        '204':
+          description: Logout successful
+
+  #################################################
+  # USERS
+  #################################################
+
+  /handyTrack/v1/users/me:
+    get:
+      tags:
+        - Users
+      summary: Get current authenticated user
+      responses:
+        '200':
+          description: User profile retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+
+    put:
+      tags:
+        - Users
+      summary: Update current user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+
+    delete:
+      tags:
+        - Users
+      summary: Delete current user account
+      responses:
+        '204':
+          description: User deleted successfully
+
+  #################################################
+  # ACCOUNTS
+  #################################################
+
+  /handyTrack/v1/accounts:
+    get:
+      tags:
+        - Accounts
+      summary: Get all user accounts
+      responses:
+        '200':
+          description: Accounts retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountResponse'
+
+    post:
+      tags:
+        - Accounts
+      summary: Create account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountRequest'
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+
+  /handyTrack/v1/accounts/{accountId}:
+    get:
+      tags:
+        - Accounts
+      summary: Get account by ID
+      parameters:
+        - $ref: '#/components/parameters/AccountId'
+      responses:
+        '200':
+          description: Account retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+
+        '404':
+          description: Account not found
+
+    put:
+      tags:
+        - Accounts
+      summary: Update account
+      parameters:
+        - $ref: '#/components/parameters/AccountId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountRequest'
+      responses:
+        '200':
+          description: Account updated
+
+    delete:
+      tags:
+        - Accounts
+      summary: Delete account
+      parameters:
+        - $ref: '#/components/parameters/AccountId'
+      responses:
+        '204':
+          description: Account deleted
+
+  #################################################
+  # TRANSACTIONS
+  #################################################
+
+  /handyTrack/v1/transactions:
+    get:
+      tags:
+        - Transactions
+      summary: Get transactions
+      description: |
+        Supports pagination and filtering.
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 20
+
+        - name: categoryId
+          in: query
+          schema:
+            type: string
+
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum:
+              - INCOME
+              - EXPENSE
+
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date
+
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date
+
+      responses:
+        '200':
+          description: Transactions retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTransactions'
+
+    post:
+      tags:
+        - Transactions
+      summary: Create transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransactionRequest'
+            examples:
+              expense:
+                value:
+                  accountId: "acc_123"
+                  categoryId: "cat_001"
+                  amount: 55.99
+                  type: EXPENSE
+                  merchant: Amazon
+                  description: Office chair
+                  transactionDate: "2026-05-11T15:30:00Z"
+
+      responses:
+        '201':
+          description: Transaction created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+  /handyTrack/v1/transactions/{transactionId}:
+    get:
+      tags:
+        - Transactions
+      summary: Get transaction by ID
+      parameters:
+        - $ref: '#/components/parameters/TransactionId'
+      responses:
+        '200':
+          description: Transaction retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+
+    put:
+      tags:
+        - Transactions
+      summary: Update transaction
+      parameters:
+        - $ref: '#/components/parameters/TransactionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTransactionRequest'
+      responses:
+        '200':
+          description: Transaction updated
+
+    delete:
+      tags:
+        - Transactions
+      summary: Delete transaction
+      parameters:
+        - $ref: '#/components/parameters/TransactionId'
+      responses:
+        '204':
+          description: Transaction deleted
+
+  #################################################
+  # CATEGORIES
+  #################################################
+
+  /handyTrack/v1/categories:
+    get:
+      tags:
+        - Categories
+      summary: Get categories
+      responses:
+        '200':
+          description: Categories retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryResponse'
+
+    post:
+      tags:
+        - Categories
+      summary: Create category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoryRequest'
+      responses:
+        '201':
+          description: Category created
+
+  #################################################
+  # BUDGETS
+  #################################################
+
+  /handyTrack/v1/budgets:
+    get:
+      tags:
+        - Budgets
+      summary: Get budgets
+      responses:
+        '200':
+          description: Budgets retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BudgetResponse'
+
+    post:
+      tags:
+        - Budgets
+      summary: Create budget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBudgetRequest'
+      responses:
+        '201':
+          description: Budget created
+
+  #################################################
+  # ANALYTICS
+  #################################################
+
+  /handyTrack/v1/analytics/summary:
+    get:
+      tags:
+        - Analytics
+      summary: Get analytics summary
+      responses:
+        '200':
+          description: Analytics summary retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsSummaryResponse'
+
+components:
+
+  #################################################
+  # SECURITY
+  #################################################
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  #################################################
+  # PARAMETERS
+  #################################################
+
+  parameters:
+
+    AccountId:
+      name: accountId
+      in: path
+      required: true
+      schema:
+        type: string
+
+    TransactionId:
+      name: transactionId
+      in: path
+      required: true
+      schema:
+        type: string
+
+  #################################################
+  # SCHEMAS
+  #################################################
+
+  schemas:
+
+    #################################################
+    # AUTH
+    #################################################
+
+    RegisterRequest:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+      properties:
+        firstName:
+          type: string
+          minLength: 2
+
+        lastName:
+          type: string
+          minLength: 2
+
+        email:
+          type: string
+          format: email
+
+        password:
+          type: string
+          format: password
+          minLength: 8
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+
+        password:
+          type: string
+
+    RefreshTokenRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+
+    LogoutRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+
+        refreshToken:
+          type: string
+
+        tokenType:
+          type: string
+          example: Bearer
+
+        expiresIn:
+          type: integer
+          example: 3600
+
+    #################################################
+    # USERS
+    #################################################
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+
+        firstName:
+          type: string
+
+        lastName:
+          type: string
+
+        email:
+          type: string
+
+        createdAt:
+          type: string
+          format: date-time
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+
+        lastName:
+          type: string
+
+    #################################################
+    # ACCOUNTS
+    #################################################
+
+    CreateAccountRequest:
+      type: object
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+
+        type:
+          type: string
+          enum:
+            - CHECKING
+            - SAVINGS
+            - CREDIT_CARD
+            - CASH
+
+        initialBalance:
+          type: number
+          format: double
+
+    UpdateAccountRequest:
+      type: object
+      properties:
+        name:
+          type: string
+
+    AccountResponse:
+      type: object
+      properties:
+        id:
+          type: string
+
+        name:
+          type: string
+
+        type:
+          type: string
+
+        balance:
+          type: number
+          format: double
+
+        createdAt:
+          type: string
+          format: date-time
+
+    #################################################
+    # TRANSACTIONS
+    #################################################
+
+    CreateTransactionRequest:
+      type: object
+      required:
+        - accountId
+        - categoryId
+        - amount
+        - type
+      properties:
+        accountId:
+          type: string
+
+        categoryId:
+          type: string
+
+        amount:
+          type: number
+          format: double
+
+        type:
+          type: string
+          enum:
+            - INCOME
+            - EXPENSE
+
+        merchant:
+          type: string
+
+        description:
+          type: string
+
+        transactionDate:
+          type: string
+          format: date-time
+
+    UpdateTransactionRequest:
+      type: object
+      properties:
+        categoryId:
+          type: string
+
+        amount:
+          type: number
+
+        merchant:
+          type: string
+
+        description:
+          type: string
+
+    TransactionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+
+        accountId:
+          type: string
+
+        categoryId:
+          type: string
+
+        amount:
+          type: number
+
+        type:
+          type: string
+
+        merchant:
+          type: string
+
+        description:
+          type: string
+
+        transactionDate:
+          type: string
+          format: date-time
+
+        createdAt:
+          type: string
+          format: date-time
+
+    PaginatedTransactions:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionResponse'
+
+        page:
+          type: integer
+
+        size:
+          type: integer
+
+        totalElements:
+          type: integer
+
+        totalPages:
+          type: integer
+
+    #################################################
+    # CATEGORIES
+    #################################################
+
+    CreateCategoryRequest:
+      type: object
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+
+        type:
+          type: string
+          enum:
+            - INCOME
+            - EXPENSE
+
+    CategoryResponse:
+      type: object
+      properties:
+        id:
+          type: string
+
+        name:
+          type: string
+
+        type:
+          type: string
+
+    #################################################
+    # BUDGETS
+    #################################################
+
+    CreateBudgetRequest:
+      type: object
+      required:
+        - categoryId
+        - limitAmount
+        - month
+      properties:
+        categoryId:
+          type: string
+
+        limitAmount:
+          type: number
+
+        month:
+          type: string
+          example: 2026-05
+
+    BudgetResponse:
+      type: object
+      properties:
+        id:
+          type: string
+
+        categoryId:
+          type: string
+
+        limitAmount:
+          type: number
+
+        currentSpent:
+          type: number
+
+        remaining:
+          type: number
+
+        utilizationPercentage:
+          type: number
+
+    #################################################
+    # ANALYTICS
+    #################################################
+
+    AnalyticsSummaryResponse:
+      type: object
+      properties:
+        totalIncome:
+          type: number
+
+        totalExpenses:
+          type: number
+
+        totalSavings:
+          type: number
+
+        budgetUtilization:
+          type: number
+
+    #################################################
+    # ERROR
+    #################################################
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+
+        status:
+          type: integer
+
+        error:
+          type: string
+
+        message:
+          type: string
+
+        path:
+          type: string
