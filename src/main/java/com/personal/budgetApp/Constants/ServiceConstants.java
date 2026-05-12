@@ -13,4 +13,8 @@ public class ServiceConstants {
   public static final String GET_USER_ENDPOINT = "/getUser";
 
   public static final String UPDATE_ENDPOINT = "/updateUser";
+
+  public static final String REQUEST_ID = "Request-Id";
+
+  public static final String INITIAL_BALANCE = "0.00";
 }

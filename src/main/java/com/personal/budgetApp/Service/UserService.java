@@ -27,7 +27,7 @@ public class UserService {
   }
 
   /**
-   * Service to create new a User and store details in DB
+   * Service to create new a User and store details in our postgres DB
    *
    * @param createUserRequest - User Request model
    * @param requestId - Request-Id to track request

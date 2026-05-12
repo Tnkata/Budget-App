@@ -1,5 +1,6 @@
 package com.personal.budgetApp.Utils;
 
+import static com.personal.budgetApp.Constants.ServiceConstants.INITIAL_BALANCE;
 import static com.personal.budgetApp.Utils.PasswordUtil.hashPassword;
 
 import com.personal.budgetApp.Model.DBEntity.UserDTO;
@@ -14,18 +15,18 @@ public class BuilderUtil {
 
     return UserDTO.builder()
         .accountId(ValidationUtil.generateAccountId())
-        .firstName(createUserRequest.firstName())
-        .lastName(createUserRequest.lastName())
-        .username(createUserRequest.userName())
-        .email(createUserRequest.email())
+        .firstName(createUserRequest.getFirstName())
+        .lastName(createUserRequest.getLastName())
+        .username(createUserRequest.getUserName())
+        .email(createUserRequest.getEmail())
         .password(hashedPassword)
-        .dateOfBirth(createUserRequest.dateOfBirth())
-        .phoneNumber(createUserRequest.phoneNumber())
-        .currency(createUserRequest.currency())
-        .income(createUserRequest.income())
-        .monthlyBudget(createUserRequest.monthlyBudget())
-        .timezone(createUserRequest.timezone())
-        .balance("0.00")
+        .dateOfBirth(createUserRequest.getDateOfBirth())
+        .phoneNumber(createUserRequest.getPhoneNumber())
+        .currency(createUserRequest.getCurrency())
+        .income(createUserRequest.getIncome())
+        .monthlyBudget(createUserRequest.getMonthlyBudget())
+        .timezone(createUserRequest.getTimezone())
+        .balance(INITIAL_BALANCE)
         .build();
   }
 
