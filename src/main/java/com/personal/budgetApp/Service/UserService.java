@@ -23,8 +23,6 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
-
-
   /**
    * Service to fetch User details from store details in DB
    *

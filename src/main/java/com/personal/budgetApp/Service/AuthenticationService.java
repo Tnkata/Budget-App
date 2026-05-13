@@ -9,41 +9,39 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import reactor.core.publisher.Mono;
 
-import static java.lang.StringTemplate.STR;
-
 public class AuthenticationService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    AuthenticationService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+  AuthenticationService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
-    private static Log log = LogFactory.getLog(AuthenticationService.class);
+  private static Log log = LogFactory.getLog(AuthenticationService.class);
 
-    /**
-     * Service to create new a User and store details in our postgres DB
-     *
-     * @param createUserRequest - User Request model
-     * @param requestId - Request-Id to track request
-     * @return - Returns CreateUserResponse model
-     */
-    public Mono<CreateUserResponse> createUserService(
-            CreateUserRequest createUserRequest, final String requestId) {
-        log.info(STR."Creating new user service. Request-Id : \{requestId}");
+  /**
+   * Service to create new a User and store details in our postgres DB
+   *
+   * @param createUserRequest - User Request model
+   * @param requestId - Request-Id to track request
+   * @return - Returns CreateUserResponse model
+   */
+  public Mono<CreateUserResponse> createUserService(
+      CreateUserRequest createUserRequest, final String requestId) {
+    log.info(String.format("Creating new user service. Request-Id : %s", requestId));
 
-        return Mono.defer(
-                () -> {
-                    UserDTO saved = userRepository.save(BuilderUtil.buildDBDetails(createUserRequest));
+    return Mono.defer(
+        () -> {
+          UserDTO saved = userRepository.save(BuilderUtil.buildDBDetails(createUserRequest));
 
-                    return Mono.just(
-                            CreateUserResponse.builder()
-                                    .accountId(saved.getId())
-                                    .firstName(saved.getFirstName())
-                                    .lastName(saved.getLastName())
-                                    .email(saved.getEmail())
-                                    .currency(saved.getCurrency())
-                                    .build());
-                });
-    }
+          return Mono.just(
+              CreateUserResponse.builder()
+                  .accountId(saved.getId())
+                  .firstName(saved.getFirstName())
+                  .lastName(saved.getLastName())
+                  .email(saved.getEmail())
+                  .currency(saved.getCurrency())
+                  .build());
+        });
+  }
 }

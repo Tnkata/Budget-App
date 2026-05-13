@@ -9,9 +9,8 @@ import com.personal.budgetApp.Model.Response.GetUserResponse;
 import reactor.core.publisher.Mono;
 
 /**
- * Utility class for mapping/building instances.
- * Provides a fluent API to build objects with default settings.
- *
+ * Utility class for mapping/building instances. Provides a fluent API to build objects with default
+ * settings.
  */
 public class BuilderUtil {
 

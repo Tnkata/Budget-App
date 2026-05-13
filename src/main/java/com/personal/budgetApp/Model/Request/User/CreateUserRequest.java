@@ -36,7 +36,6 @@ public class CreateUserRequest {
   @JsonProperty(EMAIL)
   private String email;
 
-
   @JsonProperty(USER_NAME)
   private String userName;
 
@@ -52,5 +51,4 @@ public class CreateUserRequest {
   @Size(min = 8, message = PASSWORD_ERROR_MESSAGE)
   @JsonProperty(PASSWORD)
   private String password;
-
 }
