@@ -8,6 +8,10 @@ import com.personal.budgetApp.Model.Request.User.CreateUserRequest;
 import com.personal.budgetApp.Model.Response.GetUserResponse;
 import reactor.core.publisher.Mono;
 
+/**
+ * Utility class for mapping/building instances. Provides a fluent API to build objects with default
+ * settings.
+ */
 public class BuilderUtil {
 
   public static UserDTO buildDBDetails(CreateUserRequest createUserRequest) {
@@ -22,10 +26,6 @@ public class BuilderUtil {
         .password(hashedPassword)
         .dateOfBirth(createUserRequest.getDateOfBirth())
         .phoneNumber(createUserRequest.getPhoneNumber())
-        .currency(createUserRequest.getCurrency())
-        .income(createUserRequest.getIncome())
-        .monthlyBudget(createUserRequest.getMonthlyBudget())
-        .timezone(createUserRequest.getTimezone())
         .balance(INITIAL_BALANCE)
         .build();
   }

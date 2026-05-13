@@ -4,6 +4,8 @@ public class ServiceConstants {
 
   public static final String USER_CONTROLLER_SCOPE = "/v1/user";
 
+  public static final String AUTHORIZATION_SCOPE = "/v1/authorization";
+
   public static final String BUDGET_CONTROLLER_SCOPE = "/v1/budget";
 
   public static final String TRANSACTIONS_CONTROLLER_SCOPE = "/v1/transaction";

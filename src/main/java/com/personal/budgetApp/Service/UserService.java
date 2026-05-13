@@ -1,10 +1,7 @@
 package com.personal.budgetApp.Service;
 
 import com.personal.budgetApp.Exceptions.BadRequestException;
-import com.personal.budgetApp.Model.DBEntity.UserDTO;
-import com.personal.budgetApp.Model.Request.User.CreateUserRequest;
 import com.personal.budgetApp.Model.Request.User.UpdateUserRequest;
-import com.personal.budgetApp.Model.Response.CreateUserResponse;
 import com.personal.budgetApp.Model.Response.GetUserResponse;
 import com.personal.budgetApp.Model.Response.UpdateUserResponse;
 import com.personal.budgetApp.Repository.UserRepository;
@@ -24,32 +21,6 @@ public class UserService {
 
   public UserService(UserRepository userRepository) {
     this.userRepository = userRepository;
-  }
-
-  /**
-   * Service to create new a User and store details in our postgres DB
-   *
-   * @param createUserRequest - User Request model
-   * @param requestId - Request-Id to track request
-   * @return - Returns CreateUserResponse model
-   */
-  public Mono<CreateUserResponse> createUserService(
-      CreateUserRequest createUserRequest, final String requestId) {
-    log.info("Creating new user service. ");
-
-    return Mono.defer(
-        () -> {
-          UserDTO saved = userRepository.save(BuilderUtil.buildDBDetails(createUserRequest));
-
-          return Mono.just(
-              CreateUserResponse.builder()
-                  .accountId(saved.getId())
-                  .firstName(saved.getFirstName())
-                  .lastName(saved.getLastName())
-                  .email(saved.getEmail())
-                  .currency(saved.getCurrency())
-                  .build());
-        });
   }
 
   /**
