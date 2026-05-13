@@ -42,23 +42,7 @@ public class UserController {
     this.transactionService = transactionService;
   }
 
-  @PostMapping(CREATE_USER_ENDPOINT)
-  public Mono<ResponseEntity<CreateUserResponse>> createUser(
-      @Valid @RequestBody CreateUserRequest createUserRequest,
-      @RequestHeader Map<String, String> headers) {
-    log.info("Creating New User...");
 
-    String requestId = headers.get(REQUEST_ID);
-
-    return userService
-        .createUserService(createUserRequest, requestId)
-        .map(
-            resp -> {
-              log.info("User created successfully");
-
-              return ResponseEntity.ok().body(resp);
-            });
-  }
 
   @GetMapping(GET_USER_ENDPOINT)
   public Mono<ResponseEntity<GetUserResponse>> getUser(
